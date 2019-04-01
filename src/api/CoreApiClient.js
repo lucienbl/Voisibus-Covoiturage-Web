@@ -14,6 +14,13 @@ class CoreApiClient {
       .then(res => res.body);
   }
 
+  static async getMemberByUserId(userId: string): Promise {
+    return authenticateRequest(
+      superagent.get(`${this._baseUrl()}/member/${userId}`)
+    )
+      .then(res => res.body);
+  }
+
   static _baseUrl(): string {
     return config.coreApi.baseUrlProd;
   }

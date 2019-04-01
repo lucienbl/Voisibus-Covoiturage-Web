@@ -14,3 +14,8 @@ export const darkTheme = createSelector(
   root,
   state => state[storeKeys.KEY_DARK_THEME],
 );
+
+export const memberProfile = createSelector(
+  root,
+  state => state[storeKeys.KEY_MEMBER_PROFILE],
+);

@@ -3,8 +3,9 @@
 export const PATH_ROOT = '';
 export const PATH_LOGIN = 'login';
 export const PATH_APP = 'app';
-export const PATH_MEMBER = 'member';
+export const PATH_HOME = 'home';
 export const PATH_PROFILE = 'profile';
+export const PATH_PARAM_USER_ID = ':userId';
 
 
 export default class UrlBuilder {
@@ -21,11 +22,11 @@ export default class UrlBuilder {
     return `/${PATH_APP}`;
   }
 
-  static member(): string {
-    return `${UrlBuilder.app()}/${PATH_MEMBER}`;
+  static memberHome(): string {
+    return `${UrlBuilder.app()}/${PATH_HOME}`;
   }
 
-  static profile(): string {
-    return `${UrlBuilder.app()}/${PATH_MEMBER}/${PATH_PROFILE}`;
+  static profile(userId: string): string {
+    return `${UrlBuilder.app()}/${PATH_PROFILE}/${userId}`;
   }
 }

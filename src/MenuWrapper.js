@@ -13,6 +13,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import CancelIcon from '@material-ui/icons/Cancel';
 import HomeIcon from '@material-ui/icons/Home';
+import ProfileIcon from '@material-ui/icons/Person';
 import InvertColorsIcon from '@material-ui/icons/InvertColors';
 import InvertColorsOffIcon from '@material-ui/icons/InvertColorsOff';
 import firebase from 'firebase';
@@ -34,6 +35,7 @@ const LightAppTheme = createMuiTheme({
 
 const mapStateToProps = state => ({
   darkTheme: selectors.darkTheme(state),
+  me: selectors.me(state)
 });
 
 const drawerWidth = 240;
@@ -106,6 +108,11 @@ class MenuWrapper extends React.Component {
     open: false,
   };
 
+  async componentWillMount(): void {
+    const { dispatch } = this.props;
+    await dispatch(homeActionCreators.getMe());
+  }
+
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -126,7 +133,10 @@ class MenuWrapper extends React.Component {
   }
 
   render() {
-    const { classes, children, theme, darkTheme } = this.props;
+    const { classes, children, theme, darkTheme, me } = this.props;
+
+    if (!me) return <div />;
+
     return (
       <MuiThemeProvider theme={darkTheme ? DarkAppTheme : LightAppTheme}>
         <div className={classes.root}>
@@ -185,10 +195,16 @@ class MenuWrapper extends React.Component {
             </div>
             <Divider />
             <List>
-              <Link to={UrlBuilder.member()} activeClassName="active">
+              <Link to={UrlBuilder.memberHome()} style={{ textDecoration: 'none' }}>
                 <ListItem button>
                   <ListItemIcon><HomeIcon /></ListItemIcon>
                   <ListItemText primary="Home" />
+                </ListItem>
+              </Link>
+              <Link to={UrlBuilder.profile(me.id)} style={{ textDecoration: 'none' }}>
+                <ListItem button>
+                  <ListItemIcon><ProfileIcon /></ListItemIcon>
+                  <ListItemText primary="Mon profil" />
                 </ListItem>
               </Link>
             </List>
@@ -196,7 +212,7 @@ class MenuWrapper extends React.Component {
             <List>
               <ListItem button onClick={this._handleClickSignOut}>
                 <ListItemIcon><CancelIcon /></ListItemIcon>
-                <ListItemText primary="Se deconnecter" />
+                <ListItemText primary="Se déconnecter" />
               </ListItem>
             </List>
           </Drawer>
@@ -214,7 +230,8 @@ MenuWrapper.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  darkTheme: PropTypes.bool.isRequired
+  darkTheme: PropTypes.bool.isRequired,
+  me: PropTypes.object
 };
 
 const ThemedMenuWrapper = withStyles(styles, { withTheme: true })(MenuWrapper);

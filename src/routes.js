@@ -5,7 +5,7 @@ import React from 'react';
 import { Route, IndexRedirect, IndexRoute } from 'react-router';
 import { urlPaths, UrlBuilder } from './utils';
 import { LoginScreen, AuthRestrictedContainer } from './auth';
-import { MemberHomeScreen } from './member';
+import { MemberHomeScreen, MemberProfileScreen } from './member';
 import MenuWrapper from './MenuWrapper';
 
 export default (
@@ -15,11 +15,10 @@ export default (
 
     <Route path={urlPaths.PATH_APP} component={AuthRestrictedContainer}>
       <Route component={MenuWrapper}>
-        <IndexRedirect to={UrlBuilder.member()}/>
+        <IndexRedirect to={UrlBuilder.memberHome()}/>
 
-        <Route path={urlPaths.PATH_MEMBER} component={MemberHomeScreen}>
-          <Route path={urlPaths.PATH_PROFILE} component={MemberHomeScreen}/>
-        </Route>
+        <Route path={urlPaths.PATH_HOME} component={MemberHomeScreen} />
+        <Route path={`${urlPaths.PATH_PROFILE}/${urlPaths.PATH_PARAM_USER_ID}`} component={MemberProfileScreen}/>
 
       </Route>
     </Route>

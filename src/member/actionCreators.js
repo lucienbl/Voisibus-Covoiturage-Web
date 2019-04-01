@@ -6,12 +6,21 @@ import { CoreApiClient, logCatch } from '../api';
 
 export const SET_ME = 'set-me';
 export const SET_DARK_THEME = 'set-dark-theme';
+export const SET_MEMBER_PROFILE = 'set-member-profile';
 
 export const getMe = () =>
   async (dispatch: any) => {
     try {
       const me = await CoreApiClient.getMe();
       dispatch(createAction(SET_ME, { me }));
+    } catch (e) { logCatch(e); }
+  };
+
+export const getMemberByUserId = (userId: string) =>
+  async (dispatch: any) => {
+    try {
+      const member = await CoreApiClient.getMemberByUserId(userId);
+      dispatch(createAction(SET_MEMBER_PROFILE, { member }));
     } catch (e) { logCatch(e); }
   };
 
