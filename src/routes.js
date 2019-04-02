@@ -10,10 +10,10 @@ import MenuWrapper from './MenuWrapper';
 
 export default (
   <Route path="/">
-    <IndexRedirect to={urlPaths.PATH_APP}/>
+    <IndexRedirect to={urlPaths.PATH_MEMBER}/>
     <Route path={urlPaths.PATH_LOGIN} component={LoginScreen}/>
 
-    <Route path={urlPaths.PATH_APP} component={AuthRestrictedContainer}>
+    <Route path={urlPaths.PATH_MEMBER} component={AuthRestrictedContainer}>
       <Route component={MenuWrapper}>
         <IndexRedirect to={UrlBuilder.memberHome()}/>
 

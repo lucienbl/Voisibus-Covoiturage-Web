@@ -20,6 +20,7 @@ import firebase from 'firebase';
 import { connect } from 'react-redux';
 import * as selectors from './member/selectors';
 import * as homeActionCreators from './member/actionCreators';
+import { MemberRegisterScreen } from './member';
 
 const DarkAppTheme = createMuiTheme({
   palette: {
@@ -122,7 +123,9 @@ class MenuWrapper extends React.Component {
   };
 
   _handleClickSignOut = () => {
-    firebase.auth().signOut().then(() => {
+    const { dispatch } = this.props;
+    firebase.auth().signOut().then(async () => {
+      await dispatch(homeActionCreators.clearUser());
       browserHistory.replace(UrlBuilder.login());
     });
   }
@@ -134,8 +137,6 @@ class MenuWrapper extends React.Component {
 
   render() {
     const { classes, children, theme, darkTheme, me } = this.props;
-
-    if (!me) return <div />;
 
     return (
       <MuiThemeProvider theme={darkTheme ? DarkAppTheme : LightAppTheme}>
@@ -194,21 +195,25 @@ class MenuWrapper extends React.Component {
               </IconButton>
             </div>
             <Divider />
-            <List>
-              <Link to={UrlBuilder.memberHome()} style={{ textDecoration: 'none' }}>
-                <ListItem button>
-                  <ListItemIcon><HomeIcon /></ListItemIcon>
-                  <ListItemText primary="Home" />
-                </ListItem>
-              </Link>
-              <Link to={UrlBuilder.profile(me.id)} style={{ textDecoration: 'none' }}>
-                <ListItem button>
-                  <ListItemIcon><ProfileIcon /></ListItemIcon>
-                  <ListItemText primary="Mon profil" />
-                </ListItem>
-              </Link>
-            </List>
-            <Divider />
+            {me &&
+              <div>
+                <List>
+                  <Link to={UrlBuilder.memberHome()} style={{ textDecoration: 'none' }}>
+                    <ListItem button>
+                      <ListItemIcon><HomeIcon/></ListItemIcon>
+                      <ListItemText primary="Home"/>
+                    </ListItem>
+                  </Link>
+                  <Link to={UrlBuilder.profile(me.id)} style={{ textDecoration: 'none' }}>
+                    <ListItem button>
+                      <ListItemIcon><ProfileIcon/></ListItemIcon>
+                      <ListItemText primary="Mon profil"/>
+                    </ListItem>
+                  </Link>
+                </List>
+                <Divider />
+              </div>
+            }
             <List>
               <ListItem button onClick={this._handleClickSignOut}>
                 <ListItemIcon><CancelIcon /></ListItemIcon>
@@ -218,7 +223,7 @@ class MenuWrapper extends React.Component {
           </Drawer>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            {children}
+            {me ? children : <MemberRegisterScreen/>}
           </main>
         </div>
       </MuiThemeProvider>
@@ -227,6 +232,7 @@ class MenuWrapper extends React.Component {
 }
 
 MenuWrapper.propTypes = {
+  dispatch: PropTypes.any.isRequired,
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
