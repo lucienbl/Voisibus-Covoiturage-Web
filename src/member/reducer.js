@@ -7,7 +7,8 @@ import * as storeKeys from './storeKeys';
 const initialState = {
   [storeKeys.KEY_ME]: null,
   [storeKeys.KEY_DARK_THEME]: false,
-  [storeKeys.KEY_MEMBER_PROFILE]: null
+  [storeKeys.KEY_MEMBER_PROFILE]: null,
+  [storeKeys.KEY_UNREAD_MESSAGES]: []
 };
 
 export default handleActions({
@@ -22,5 +23,9 @@ export default handleActions({
   [Actions.SET_MEMBER_PROFILE]: (state, action) => ({
     ...state,
     [storeKeys.KEY_MEMBER_PROFILE]: action.payload.member,
+  }),
+  [Actions.SET_UNREAD_MESSAGES]: (state, action) => ({
+    ...state,
+    [storeKeys.KEY_UNREAD_MESSAGES]: action.payload.messages,
   }),
 }, initialState);

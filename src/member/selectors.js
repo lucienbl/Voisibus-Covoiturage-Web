@@ -19,3 +19,8 @@ export const memberProfile = createSelector(
   root,
   state => state[storeKeys.KEY_MEMBER_PROFILE],
 );
+
+export const unreadMessages = createSelector(
+  root,
+  state => state[storeKeys.KEY_UNREAD_MESSAGES],
+);

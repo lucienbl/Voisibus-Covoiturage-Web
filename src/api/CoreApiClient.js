@@ -41,6 +41,13 @@ class CoreApiClient {
       .then(res => res.body);
   }
 
+  static async getUnreadMessages(): Promise {
+    return authenticateRequest(
+      superagent.get(`${this._baseUrl()}/messages`)
+    )
+      .then(res => res.body);
+  }
+
   static _baseUrl(): string {
     return config.coreApi.baseUrlProd;
   }

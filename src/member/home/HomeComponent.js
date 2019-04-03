@@ -4,23 +4,19 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CircularProgress, Typography, Paper, Grid } from '@material-ui/core';
+import { CircularProgress, Typography, Paper, Grid, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 class HomeComponent extends React.Component {
 
-  _getRandomWelcomeMessage = (name: string) => {
-    const messages = ['Bienvenue', 'Salut', 'Bonjour', 'Vous voilà de retour', 'Comment allez-vous', 'Quel plaisir de vous revoir'];
-    return `${messages[Math.floor(Math.random() * messages.length)]}, ${name}!`;
-  };
-
   render() {
-    const { me } = this.props;
+    const { me, unreadMessages, expandedMessageIndex, handleChangeExpandedMessageIndex, welcomeMessage } = this.props;
     if (!me) return <center><CircularProgress /></center>;
 
     return (
       <div>
         <Typography variant="h4">
-          {this._getRandomWelcomeMessage(me.name)}
+          {welcomeMessage}
         </Typography>
 
         <Grid container spacing={16}>
@@ -29,9 +25,26 @@ class HomeComponent extends React.Component {
               <Typography variant="h4">
                 Informations
               </Typography>
-              <Typography variant="h6">
-                Rien de neuf!
-              </Typography>
+              {unreadMessages.length <= 0 &&
+                <Typography variant="h6">
+                  Rien de neuf!
+                </Typography>
+              }
+              {unreadMessages.map((message, index) => (
+                <ExpansionPanel key={message.id} expanded={expandedMessageIndex === index} onChange={() => handleChangeExpandedMessageIndex(index)}>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h6">{message.title}</Typography>
+                    <div style={{ flexGrow: 1 }} />
+                    <Typography style={{ color: '#AAA', marginTop: 5 }}>Le <i>{new Date(message.creationTime).toLocaleString()}</i></Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails style={{ flexDirection: 'column' }}>
+                    <Typography>
+                      {message.message}
+                    </Typography>
+                    <Typography style={{ color: '#AAA', textAlign: 'right' }}>De <i>{message.authorName}</i></Typography>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              ))}
             </Paper>
           </Grid>
           <Grid item xs={4}>
@@ -53,6 +66,10 @@ class HomeComponent extends React.Component {
 
 HomeComponent.propTypes = {
   me: PropTypes.object,
+  unreadMessages: PropTypes.array.isRequired,
+  expandedMessageIndex: PropTypes.number.isRequired,
+  handleChangeExpandedMessageIndex: PropTypes.func.isRequired,
+  welcomeMessage: PropTypes.string.isRequired
 };
 
 export default HomeComponent;

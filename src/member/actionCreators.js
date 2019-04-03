@@ -7,6 +7,7 @@ import { CoreApiClient, logCatch } from '../api';
 export const SET_ME = 'set-me';
 export const SET_DARK_THEME = 'set-dark-theme';
 export const SET_MEMBER_PROFILE = 'set-member-profile';
+export const SET_UNREAD_MESSAGES = 'set-unread-messages';
 
 export const getMe = () =>
   async (dispatch: any) => {
@@ -43,5 +44,13 @@ export const clearUser = () =>
   async (dispatch: any) => {
     try {
       dispatch(createAction(SET_ME, { me: null }));
+    } catch (e) { logCatch(e); }
+  };
+
+export const getUnreadMessages = () =>
+  async (dispatch: any) => {
+    try {
+      const messages = await CoreApiClient.getUnreadMessages();
+      dispatch(createAction(SET_UNREAD_MESSAGES, { messages }));
     } catch (e) { logCatch(e); }
   };
