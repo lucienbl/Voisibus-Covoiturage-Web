@@ -24,7 +24,7 @@ class CoreApiClient {
         email: firebase.auth().currentUser.email,
         name,
         familyname,
-        fcmToken: firebase.auth().currentUser.uid,
+        fcmToken: firebase.messaging().getToken(),
         city,
         gender,
         isSmoker,
